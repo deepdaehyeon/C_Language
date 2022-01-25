@@ -15,28 +15,45 @@ void Input_Data(void)
 	}
 }
 
-
-int counting(int d){
-	int ub, lb; 
-	int m, s=0, e= N-1;
+int bnsearch_lower( int s, int e, int d){
+	
+	int m, sol=-1 ; 
 	while(s<=e){
-		m = (s+e)/2;
-		if (d == num[m]) {
-			ub = m; 
-			lb = m;
-			while(num[ub] == d){
-				ub ++;  
-			}
-			while(num[lb] == d){
-				lb --;  
-			}
-			
-			return ub-lb -1 ; 
+		m = (s+e)/2; 
+		if (num[m] >= d){
+			sol =m;
+			e = m-1;
 		}
-		else if (d> num[m]) s = m+1; 
-		else e = m-1;  
+		else s = m+1;
 	}
-	return 0; 
+	return sol;
+
+}
+
+int bnsearch_upper( int s, int e, int d){
+	int m, sol=-1 ; 
+	while(s<=e){
+		m = (s+e)/2; 
+		if (num[m] <= d){
+			sol =m;
+			s = m+1;
+		}
+		else e = m-1;
+	}
+	return sol;
+}
+
+
+int solve(int d){
+	int ub, lb; 
+	int cnt=0; 
+	int m, s=0, e= N-1;
+	lb = bnsearch_lower(s, e, d);
+	if (lb != -1 && num[lb] <= d) {
+		ub = bnsearch_upper(s, e,d);
+		cnt = ub-lb+1; 
+	}
+	return cnt; 
 }
 
 
@@ -44,12 +61,11 @@ int main(void)
 {
 	int i,  T,  d;
 	Input_Data();
-
 	scanf("%d",  &T);
 	for (i = 0; i < T; i++)
 	{
 		scanf("%d",  &d);
-		printf("%d ", counting(d));
+		printf("%d ", solve(d));
 	}
 	return 0;
 }
